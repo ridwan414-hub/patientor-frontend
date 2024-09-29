@@ -1,65 +1,95 @@
-# Patientor
+# Patientor Frontend
 
-Patientor is a medical record application for doctors who handle diagnoses and basic health information of their patients.
+Patientor is a medical record application for doctors who handle diagnoses and basic health information of their patients. This repository contains the frontend part of the application.
 
-## Frontend
+## Repository Structure
 
-### Getting started
-- To get the frontend app running, install its dependencies with `npm install` and run it with `npm run dev`.
-- The app should work without a backend, but make sure that the request made to `/api/ping` on startup is successful before continuing.
-
-## Backend
-
-### Getting started
-- Navigate to the backend directory: `cd backend`
-- Install dependencies: `npm install`
-- Start the development server: `npm run dev`
-
-### Folder Structure
-
-backend/
+```
+patientor-frontend/
 ├── src/
-│ ├── routes/
-│ │ ├── patients.ts
-│ │ └── diagnoses.ts
-│ ├── services/
-│ │ ├── patientService.ts
-│ │ └── diagnoseService.ts
-│ ├── types.ts
-│ ├── utils.ts
-│ └── index.ts
-├── data/
-│ ├── patients.ts
-│ └── diagnoses.ts
-├── build/
-├── node_modules/
+│   ├── components/
+│   │   ├── AddPatientModal/
+│   │   ├── PatientListPage/
+│   │   ├── SinglePatientPage/
+│   │   ├── HealthRatingBar.tsx
+│   │   └── ...
+│   ├── services/
+│   │   ├── diagnosesService.ts
+│   │   └── patientService.ts
+│   ├── types.ts
+│   ├── constants.ts
+│   ├── App.tsx
+│   └── main.tsx
+├── public/
 ├── package.json
-└── tsconfig.json
+├── tsconfig.json
+├── vite.config.ts
+└── README.md
+```
 
-### API Endpoints
+## Getting Started
 
-The backend provides the following API endpoints:
+1. Clone the repository
+2. Install dependencies:
+   ```
+   npm install
+   ```
+3. Start the development server:
+   ```
+   npm run dev
+   ```
 
-#### Patients
+The app should work without a backend, but make sure that the request made to `/api/ping` on startup is successful before continuing.
 
-- `GET /api/patients`: Get all patients
-- `POST /api/patients`: Add a new patient
-- `GET /api/patients/:id`: Get a specific patient by ID
-- `POST /api/patients/:id/entries`: Add a medical entry to a specific patient
+## Key Features
 
-#### Diagnoses
+- Patient list view
+- Individual patient view
+- Add new patients
+- Add new entries for patients (Health Check, Hospital, Occupational Healthcare)
+- Diagnosis codes integration
 
-- `GET /api/diagnoses`: Get all diagnoses
+## Technologies Used
 
-#### Ping
+- React
+- TypeScript
+- Material-UI
+- Axios
+- Vite (for build tooling)
 
-- `GET /api/ping`: Check if the server is running
+## Main Components
 
-## Running the Full Stack Application
+- `App.tsx`: The main application component
+- `PatientListPage`: Displays the list of patients
+- `SinglePatientPage`: Shows detailed information for a single patient
+- `AddPatientModal`: Form for adding a new patient
+- `AddEntryForm`: Form for adding new entries to a patient's record
 
-1. Start the backend server (instructions above)
-2. Start the frontend development server (instructions above)
-3. The frontend should now be able to communicate with the backend
+## Data Models
 
-Make sure both the frontend and backend are running simultaneously for the full functionality of the Patientor application.
+The application uses the following main data models:
 
+1. Patient
+2. Entry (with subtypes: HealthCheckEntry, HospitalEntry, OccupationalHealthcareEntry)
+3. Diagnosis
+
+For detailed type definitions, refer to the `src/types.ts` file.
+
+## API Integration
+
+The frontend communicates with a backend API. The base URL for the API is defined in `src/constants.ts`. API calls are managed through service modules in the `src/services/` directory.
+
+## Scripts
+
+- `npm run dev`: Start the development server
+- `npm run build`: Build the production-ready application
+- `npm run lint`: Run ESLint for code linting
+- `npm run preview`: Preview the built application
+
+## Contributing
+
+Contributions to Patientor frontend are welcome. Please ensure that you update tests as appropriate and adhere to the existing coding style.
+
+## License
+
+[MIT License](https://opensource.org/licenses/MIT)
