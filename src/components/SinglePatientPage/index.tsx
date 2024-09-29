@@ -11,7 +11,7 @@ import {
   Favorite as FavoriteIcon, Work as WorkIcon, Add as AddIcon
 } from "@mui/icons-material";
 import { Entry, Patient, Gender, HealthCheckRating, EntryType, DiagnosisEntry, EntryFormValues } from "../../types";
-import patientsService from "../../services/patients";
+import patientsService from "../../services/patientService";
 import AddEntryForm from "./AddEntryForm";
 import diagnosesService from "../../services/diagnosesService";
 

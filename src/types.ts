@@ -78,7 +78,7 @@ export interface Patient {
 }
 
 //new patient entry type
-export type NewPatientEntry = Omit<Patient, "id">;
+export type NewPatientEntry = Omit<Patient, "id" | "entries">;
 
 
 //non sensitive patient entry type

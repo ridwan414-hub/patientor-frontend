@@ -1,12 +1,12 @@
 import { useState, SyntheticEvent } from "react";
 
-import {  TextField, InputLabel, MenuItem, Select, Grid, Button, SelectChangeEvent } from '@mui/material';
+import { TextField, InputLabel, MenuItem, Select, Grid, Button, SelectChangeEvent, Box, Typography } from '@mui/material';
 
-import { PatientFormValues, Gender } from "../../types";
+import { NewPatientEntry, Gender } from "../../types";
 
 interface Props {
   onCancel: () => void;
-  onSubmit: (values: PatientFormValues) => void;
+  onSubmit: (values: NewPatientEntry) => void;
 }
 
 interface GenderOption{
@@ -48,77 +48,84 @@ const AddPatientForm = ({ onCancel, onSubmit }: Props) => {
   };
 
   return (
-    <div>
-      <form onSubmit={addPatient}>
-        <TextField
-          label="Name"
-          fullWidth 
-          value={name}
-          onChange={({ target }) => setName(target.value)}
-        />
-        <TextField
-          label="Social security number"
-          fullWidth
-          value={ssn}
-          onChange={({ target }) => setSsn(target.value)}
-        />
-        <TextField
-          label="Date of birth"
-          placeholder="YYYY-MM-DD"
-          fullWidth
-          value={dateOfBirth}
-          onChange={({ target }) => setDateOfBirth(target.value)}
-        />
-        <TextField
-          label="Occupation"
-          fullWidth
-          value={occupation}
-          onChange={({ target }) => setOccupation(target.value)}
-        />
-
-        <InputLabel style={{ marginTop: 20 }}>Gender</InputLabel>
-        <Select
-          label="Gender"
-          fullWidth
-          value={gender}
-          onChange={onGenderChange}
-        >
-        {genderOptions.map(option =>
-          <MenuItem
-            key={option.label}
-            value={option.value}
-          >
-            {option.label
-          }</MenuItem>
-        )}
-        </Select>
-
-        <Grid>
-          <Grid item>
-            <Button
-              color="secondary"
-              variant="contained"
-              style={{ float: "left" }}
-              type="button"
-              onClick={onCancel}
-            >
-              Cancel
-            </Button>
-          </Grid>
-          <Grid item>
-            <Button
-              style={{
-                float: "right",
-              }}
-              type="submit"
-              variant="contained"
-            >
-              Add
-            </Button>
-          </Grid>
+    <Box component="form" onSubmit={addPatient} sx={{ mt: 2 }}>
+      <Typography variant="h6" gutterBottom>
+        Add New Patient
+      </Typography>
+      <Grid container spacing={3}>
+        <Grid item xs={12} sm={6}>
+          <TextField
+            required
+            label="Name"
+            fullWidth
+            value={name}
+            onChange={({ target }) => setName(target.value)}
+          />
         </Grid>
-      </form>
-    </div>
+        <Grid item xs={12} sm={6}>
+          <TextField
+            required
+            label="Social security number"
+            fullWidth
+            value={ssn}
+            onChange={({ target }) => setSsn(target.value)}
+          />
+        </Grid>
+        <Grid item xs={12} sm={6}>
+          <TextField
+            required
+            label="Date of birth"
+            type="date"
+            fullWidth
+            value={dateOfBirth}
+            onChange={({ target }) => setDateOfBirth(target.value)}
+            InputLabelProps={{ shrink: true }}
+          />
+        </Grid>
+        <Grid item xs={12} sm={6}>
+          <TextField
+            required
+            label="Occupation"
+            fullWidth
+            value={occupation}
+            onChange={({ target }) => setOccupation(target.value)}
+          />
+        </Grid>
+        <Grid item xs={12}>
+          <InputLabel id="gender-label">Gender</InputLabel>
+          <Select
+            labelId="gender-label"
+            label="Gender"
+            fullWidth
+            value={gender}
+            onChange={onGenderChange}
+          >
+            {genderOptions.map(option =>
+              <MenuItem key={option.label} value={option.value}>
+                {option.label}
+              </MenuItem>
+            )}
+          </Select>
+        </Grid>
+      </Grid>
+      <Box sx={{ display: 'flex', justifyContent: 'flex-end', mt: 3 }}>
+        <Button
+          color="secondary"
+          variant="outlined"
+          onClick={onCancel}
+          sx={{ mr: 1 }}
+        >
+          Cancel
+        </Button>
+        <Button
+          type="submit"
+          variant="contained"
+          color="primary"
+        >
+          Add Patient
+        </Button>
+      </Box>
+    </Box>
   );
 };
 
