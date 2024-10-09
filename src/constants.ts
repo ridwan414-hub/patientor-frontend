@@ -1,1 +1,1 @@
-export const apiBaseUrl = 'http://localhost:3001/api';
+export const apiBaseUrl = "https://patientor-backend-8ytv.onrender.com/api";
