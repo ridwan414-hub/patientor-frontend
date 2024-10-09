@@ -1,5 +1,7 @@
 # Patientor Frontend
 
+[Link to the deployed app](https://patientor-frontend-2nso.onrender.com/)
+
 Patientor is a medical record application for doctors who handle diagnoses and basic health information of their patients. This repository contains the frontend part of the application.
 
 ## Repository Structure
