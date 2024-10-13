@@ -10,6 +10,7 @@ import {
   Chip,
 } from "@mui/material";
 import { DiagnosisEntry, EntryFormValues, EntryType } from "../../types";
+import { motion } from "framer-motion";
 
 interface Props {
   onSubmit: (values: EntryFormValues) => void;
@@ -87,170 +88,184 @@ const AddEntryForm = ({ onSubmit, onCancel, entryType, diagnoses }: Props) => {
   };
 
   return (
-    <Box sx={{ border: "2px dashed grey", borderRadius: 2, padding: 2, mt: 2 }}>
-      <Typography variant="h6">New {entryType} entry</Typography>
-      <form onSubmit={addEntry}>
-        <TextField
-          sx={{ my: 1 }}
-          label="Description"
-          variant="standard"
-          fullWidth
-          value={description}
-          onChange={({ target }) => setDescription(target.value)}
-        />
-        <TextField
-          sx={{ my: 1 }}
-          type="date"
-          label="Date"
-          variant="standard"
-          fullWidth
-          value={date}
-          onChange={({ target }) => setDate(target.value)}
-          InputLabelProps={{
-            shrink: true,
-          }}
-        />
-        <TextField
-          sx={{ my: 1 }}
-          label="Specialist"
-          variant="standard"
-          fullWidth
-          value={specialist}
-          onChange={({ target }) => setSpecialist(target.value)}
-        />
-        {entryType === EntryType.HealthCheck && (
+    <motion.div
+      initial={{ opacity: 0, y: 50 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: 50 }}
+    >
+      <Box
+        sx={{
+          border: "2px dashed grey",
+          borderRadius: 2,
+          padding: 2,
+          mt: 2,
+          background: "white",
+          maxWidth: 600,
+          margin: "auto",
+        }}
+      >
+        <Typography variant="h6">New {entryType} entry</Typography>
+        <form onSubmit={addEntry}>
           <TextField
             sx={{ my: 1 }}
-            select
-            label="Health check rating"
+            label="Description"
             variant="standard"
             fullWidth
-            value={healthCheckRating}
-            onChange={({ target }) =>
-              setHealthCheckRating(parseInt(target.value))
-            }
-          >
-            {healthCheckRatingOptions.map((option) => (
-              <MenuItem key={option.value} value={option.value}>
-                {option.label}
-              </MenuItem>
-            ))}
-          </TextField>
-        )}
-        {entryType === EntryType.OccupationalHealthcare && (
-          <>
+            value={description}
+            onChange={({ target }) => setDescription(target.value)}
+          />
+          <TextField
+            sx={{ my: 1 }}
+            type="date"
+            label="Date"
+            variant="standard"
+            fullWidth
+            value={date}
+            onChange={({ target }) => setDate(target.value)}
+            InputLabelProps={{
+              shrink: true,
+            }}
+          />
+          <TextField
+            sx={{ my: 1 }}
+            label="Specialist"
+            variant="standard"
+            fullWidth
+            value={specialist}
+            onChange={({ target }) => setSpecialist(target.value)}
+          />
+          {entryType === EntryType.HealthCheck && (
             <TextField
               sx={{ my: 1 }}
-              label="Employee"
+              select
+              label="Health check rating"
               variant="standard"
               fullWidth
-              value={employerName}
-              onChange={({ target }) => setEmployerName(target.value)}
-            />
-            <TextField
-              sx={{ my: 1 }}
-              type="date"
-              label="Sick leave start date"
-              variant="standard"
-              fullWidth
-              value={sickLeaveStartDate}
-              onChange={({ target }) => setSickLeaveStartDate(target.value)}
-              InputLabelProps={{
-                shrink: true,
-              }}
-            />
-            <TextField
-              sx={{ my: 1 }}
-              type="date"
-              label="Sick leave end date"
-              variant="standard"
-              fullWidth
-              value={sickLeaveEndDate}
-              onChange={({ target }) => setSickLeaveEndDate(target.value)}
-              InputLabelProps={{
-                shrink: true,
-              }}
-            />
-          </>
-        )}
-        {entryType === EntryType.Hospital && (
-          <>
-            <TextField
-              sx={{ my: 1 }}
-              type="date"
-              label="Discharge date"
-              variant="standard"
-              fullWidth
-              value={dischargeDate}
-              onChange={({ target }) => setDischargeDate(target.value)}
-              InputLabelProps={{
-                shrink: true,
-              }}
-            />
-            <TextField
-              sx={{ my: 1 }}
-              label="Discharge criteria"
-              variant="standard"
-              fullWidth
-              value={dischargeCriteria}
-              onChange={({ target }) => setDischargeCriteria(target.value)}
-            />
-          </>
-        )}
-        <Autocomplete
-          multiple
-          id="diagnoses-select"
-          options={diagnoses}
-          getOptionLabel={(option) => `${option.code} ${option.name}`}
-          value={diagnoses.filter(d => selectedDiagnoses.includes(d.code))}
-          onChange={(_event, newValue) => {
-            setSelectedDiagnoses(newValue.map(v => v.code));
-          }}
-          renderInput={(params) => (
-            <TextField
-              {...params}
-              variant="standard"
-              label="Diagnosis codes"
-              placeholder="Select diagnoses"
-            />
+              value={healthCheckRating}
+              onChange={({ target }) =>
+                setHealthCheckRating(parseInt(target.value))
+              }
+            >
+              {healthCheckRatingOptions.map((option) => (
+                <MenuItem key={option.value} value={option.value}>
+                  {option.label}
+                </MenuItem>
+              ))}
+            </TextField>
           )}
-          renderTags={(value, getTagProps) =>
-            value.map((option, index) => (
-              <Chip
-                variant="outlined"
-                label={option.code}
-                {...getTagProps({ index })}
+          {entryType === EntryType.OccupationalHealthcare && (
+            <>
+              <TextField
+                sx={{ my: 1 }}
+                label="Employee"
+                variant="standard"
+                fullWidth
+                value={employerName}
+                onChange={({ target }) => setEmployerName(target.value)}
               />
-            ))
-          }
-        />
+              <TextField
+                sx={{ my: 1 }}
+                type="date"
+                label="Sick leave start date"
+                variant="standard"
+                fullWidth
+                value={sickLeaveStartDate}
+                onChange={({ target }) => setSickLeaveStartDate(target.value)}
+                InputLabelProps={{
+                  shrink: true,
+                }}
+              />
+              <TextField
+                sx={{ my: 1 }}
+                type="date"
+                label="Sick leave end date"
+                variant="standard"
+                fullWidth
+                value={sickLeaveEndDate}
+                onChange={({ target }) => setSickLeaveEndDate(target.value)}
+                InputLabelProps={{
+                  shrink: true,
+                }}
+              />
+            </>
+          )}
+          {entryType === EntryType.Hospital && (
+            <>
+              <TextField
+                sx={{ my: 1 }}
+                type="date"
+                label="Discharge date"
+                variant="standard"
+                fullWidth
+                value={dischargeDate}
+                onChange={({ target }) => setDischargeDate(target.value)}
+                InputLabelProps={{
+                  shrink: true,
+                }}
+              />
+              <TextField
+                sx={{ my: 1 }}
+                label="Discharge criteria"
+                variant="standard"
+                fullWidth
+                value={dischargeCriteria}
+                onChange={({ target }) => setDischargeCriteria(target.value)}
+              />
+            </>
+          )}
+          <Autocomplete
+            multiple
+            id="diagnoses-select"
+            options={diagnoses}
+            getOptionLabel={(option) => `${option.code} ${option.name}`}
+            value={diagnoses.filter((d) => selectedDiagnoses.includes(d.code))}
+            onChange={(_event, newValue) => {
+              setSelectedDiagnoses(newValue.map((v) => v.code));
+            }}
+            renderInput={(params) => (
+              <TextField
+                {...params}
+                variant="standard"
+                label="Diagnosis codes"
+                placeholder="Select diagnoses"
+              />
+            )}
+            renderTags={(value, getTagProps) =>
+              value.map((option, index) => (
+                <Chip
+                  variant="outlined"
+                  label={option.code}
+                  {...getTagProps({ index })}
+                />
+              ))
+            }
+          />
 
-        <Grid sx={{ pb: 4 }}>
-          <Grid item>
-            <Button
-              color="warning"
-              variant="contained"
-              style={{ float: "left" }}
-              type="button"
-              onClick={onCancel}
-            >
-              Cancel
-            </Button>
+          <Grid container spacing={2} sx={{ mt: 2 }}>
+            <Grid item xs={6}>
+              <Button
+                fullWidth
+                color="secondary"
+                variant="contained"
+                onClick={onCancel}
+              >
+                Cancel
+              </Button>
+            </Grid>
+            <Grid item xs={6}>
+              <Button
+                fullWidth
+                type="submit"
+                variant="contained"
+                color="primary"
+              >
+                Add
+              </Button>
+            </Grid>
           </Grid>
-          <Grid item>
-            <Button
-              style={{
-                float: "right",
-              }}
-              type="submit"
-              variant="contained"
-            >
-              Add
-            </Button>
-          </Grid>
-        </Grid>
-      </form>
-    </Box>
+        </form>
+      </Box>
+    </motion.div>
   );
 };
 

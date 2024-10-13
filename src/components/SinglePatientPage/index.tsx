@@ -1,16 +1,47 @@
 import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import {
-  Typography, List, ListItem, ListItemIcon, ListItemText,
-  CircularProgress, Chip, Paper, Card, CardContent, Box,
-  Button, Menu, MenuItem
+  Typography,
+  List,
+  ListItem,
+  ListItemIcon,
+  ListItemText,
+  CircularProgress,
+  Chip,
+  Paper,
+  Card,
+  CardContent,
+  Box,
+  Button,
+  Menu,
+  MenuItem,
+  Fade,
+  Backdrop,
 } from "@mui/material";
 import {
-  CalendarToday, Work, Fingerprint, Male, Female, Transgender,
-  LocalHospital, Person, HealthAndSafety, MedicalServices,
-  Favorite as FavoriteIcon, Work as WorkIcon, Add as AddIcon
+  CalendarToday,
+  Work,
+  Fingerprint,
+  Male,
+  Female,
+  Transgender,
+  LocalHospital,
+  Person,
+  HealthAndSafety,
+  MedicalServices,
+  Favorite as FavoriteIcon,
+  Work as WorkIcon,
+  Add as AddIcon,
 } from "@mui/icons-material";
-import { Entry, Patient, Gender, HealthCheckRating, EntryType, DiagnosisEntry, EntryFormValues } from "../../types";
+import {
+  Entry,
+  Patient,
+  Gender,
+  HealthCheckRating,
+  EntryType,
+  DiagnosisEntry,
+  EntryFormValues,
+} from "../../types";
 import patientsService from "../../services/patientService";
 import AddEntryForm from "./AddEntryForm";
 import diagnosesService from "../../services/diagnosesService";
@@ -34,14 +65,22 @@ interface EntryTypeDetails {
   label: string;
 }
 
-const getEntryTypeDetails = (type: Entry['type']): EntryTypeDetails => {
+const getEntryTypeDetails = (type: Entry["type"]): EntryTypeDetails => {
   switch (type) {
     case "Hospital":
       return { color: "error", icon: <LocalHospital />, label: "Hospital" };
     case "OccupationalHealthcare":
-      return { color: "info", icon: <WorkIcon />, label: "Occupational Healthcare" };
+      return {
+        color: "info",
+        icon: <WorkIcon />,
+        label: "Occupational Healthcare",
+      };
     case "HealthCheck":
-      return { color: "success", icon: <HealthAndSafety />, label: "Health Check" };
+      return {
+        color: "success",
+        icon: <HealthAndSafety />,
+        label: "Health Check",
+      };
     default:
       return { color: "default", icon: <MedicalServices />, label: "Other" };
   }
@@ -49,11 +88,16 @@ const getEntryTypeDetails = (type: Entry['type']): EntryTypeDetails => {
 
 const getHealthCheckRatingColor = (rating: HealthCheckRating): string => {
   switch (rating) {
-    case HealthCheckRating.Healthy: return 'green';
-    case HealthCheckRating.LowRisk: return 'yellow';
-    case HealthCheckRating.HighRisk: return 'orange';
-    case HealthCheckRating.CriticalRisk: return 'red';
-    default: return 'gray';
+    case HealthCheckRating.Healthy:
+      return "green";
+    case HealthCheckRating.LowRisk:
+      return "yellow";
+    case HealthCheckRating.HighRisk:
+      return "orange";
+    case HealthCheckRating.CriticalRisk:
+      return "red";
+    default:
+      return "gray";
   }
 };
 
@@ -61,9 +105,25 @@ const EntryDetails: React.FC<{ entry: Entry }> = ({ entry }) => {
   const { color, icon, label } = getEntryTypeDetails(entry.type);
 
   return (
-    <Card sx={{ mb: 2, borderLeft: 6, borderColor: `${color}.main` }}>
+    <Card
+      sx={{
+        mb: 2,
+        borderLeft: 6,
+        borderColor: `${color}.main`,
+        transition: "all 0.3s ease",
+        "&:hover": {
+          transform: "translateY(-4px)",
+          boxShadow: "0 8px 16px rgba(0,0,0,0.1)",
+        },
+      }}
+    >
       <CardContent>
-        <Box display="flex" alignItems="center" justifyContent="space-between" mb={1}>
+        <Box
+          display="flex"
+          alignItems="center"
+          justifyContent="space-between"
+          mb={1}
+        >
           <Box display="flex" alignItems="center">
             {icon}
             <Typography variant="h6" component="div" sx={{ ml: 1 }}>
@@ -93,18 +153,25 @@ const renderEntryTypeDetails = (entry: Entry) => {
     case "Hospital":
       return (
         <Box mt={1}>
-          <Typography variant="body2" fontWeight="bold">Discharge:</Typography>
+          <Typography variant="body2" fontWeight="bold">
+            Discharge:
+          </Typography>
           <Typography variant="body2">Date: {entry.discharge.date}</Typography>
-          <Typography variant="body2">Criteria: {entry.discharge.criteria}</Typography>
+          <Typography variant="body2">
+            Criteria: {entry.discharge.criteria}
+          </Typography>
         </Box>
       );
     case "OccupationalHealthcare":
       return (
         <Box mt={1}>
-          <Typography variant="body2" fontWeight="bold">Employer: {entry.employerName}</Typography>
+          <Typography variant="body2" fontWeight="bold">
+            Employer: {entry.employerName}
+          </Typography>
           {entry.sickLeave && (
             <Typography variant="body2">
-              Sick Leave: {entry.sickLeave.startDate} - {entry.sickLeave.endDate}
+              Sick Leave: {entry.sickLeave.startDate} -{" "}
+              {entry.sickLeave.endDate}
             </Typography>
           )}
         </Box>
@@ -112,14 +179,17 @@ const renderEntryTypeDetails = (entry: Entry) => {
     case "HealthCheck":
       return (
         <Box mt={1}>
-          <Typography variant="body2" fontWeight="bold">Health Check Rating:</Typography>
+          <Typography variant="body2" fontWeight="bold">
+            Health Check Rating:
+          </Typography>
           {[0, 1, 2, 3].map((rating) => (
             <FavoriteIcon
               key={rating}
               style={{
-                color: rating <= entry.healthCheckRating
-                  ? getHealthCheckRatingColor(entry.healthCheckRating)
-                  : 'gray'
+                color:
+                  rating <= entry.healthCheckRating
+                    ? getHealthCheckRatingColor(entry.healthCheckRating)
+                    : "gray",
               }}
             />
           ))}
@@ -136,9 +206,11 @@ const SinglePatientPage: React.FC = () => {
   const [patient, setPatient] = useState<Patient | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-  const [selectedEntryType, setSelectedEntryType] = useState<EntryType | undefined>(undefined);
+  const [selectedEntryType, setSelectedEntryType] = useState<
+    EntryType | undefined
+  >(undefined);
   const [diagnoses, setDiagnoses] = useState<DiagnosisEntry[]>([]);
-  
+
   useEffect(() => {
     const fetchPatientData = async () => {
       if (id) {
@@ -178,7 +250,7 @@ const SinglePatientPage: React.FC = () => {
           if (prevPatient) {
             return {
               ...prevPatient,
-              entries: [...prevPatient.entries, newEntry]
+              entries: [...prevPatient.entries, newEntry],
             };
           }
           return prevPatient;
@@ -202,64 +274,107 @@ const SinglePatientPage: React.FC = () => {
   }
 
   return (
-    <Paper elevation={3} sx={{ p: 3, mt: 3 }}>
-      <Typography variant="h4" gutterBottom>
-        {patient.name} <GenderIcon gender={patient.gender} />
-      </Typography>
-      <List>
-        <ListItem>
-          <ListItemIcon>
-            <CalendarToday />
-          </ListItemIcon>
-          <ListItemText primary="Date of Birth" secondary={patient.dateOfBirth} />
-        </ListItem>
-        <ListItem>
-          <ListItemIcon>
-            <Work />
-          </ListItemIcon>
-          <ListItemText primary="Occupation" secondary={patient.occupation} />
-        </ListItem>
-        <ListItem>
-          <ListItemIcon>
-            <Fingerprint />
-          </ListItemIcon>
-          <ListItemText primary="SSN" secondary={patient.ssn} />
-        </ListItem>
-      </List>
+    <Fade in={!loading}>
+      <Paper
+        elevation={3}
+        sx={{
+          p: 3,
+          mt: 3,
+          background: "linear-gradient(to right bottom, #ffffff, #f0f0f0)",
+        }}
+      >
+        <Typography variant="h4" gutterBottom>
+          {patient.name} <GenderIcon gender={patient.gender} />
+        </Typography>
+        <List>
+          <ListItem>
+            <ListItemIcon>
+              <CalendarToday />
+            </ListItemIcon>
+            <ListItemText
+              primary="Date of Birth"
+              secondary={patient.dateOfBirth}
+            />
+          </ListItem>
+          <ListItem>
+            <ListItemIcon>
+              <Work />
+            </ListItemIcon>
+            <ListItemText primary="Occupation" secondary={patient.occupation} />
+          </ListItem>
+          <ListItem>
+            <ListItemIcon>
+              <Fingerprint />
+            </ListItemIcon>
+            <ListItemText primary="SSN" secondary={patient.ssn} />
+          </ListItem>
+        </List>
 
-      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mt: 4, mb: 2 }}>
-        <Typography variant="h5">Entries</Typography>
-        <Button
-          variant="contained"
-          startIcon={<AddIcon />}
-          onClick={handleClick}
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            mt: 4,
+            mb: 2,
+          }}
         >
-          Add New Entry
-        </Button>
-        <Menu
-          anchorEl={anchorEl}
-          open={Boolean(anchorEl)}
-          onClose={handleClose}
-        >
-          <MenuItem onClick={() => handleEntryTypeSelect(EntryType.HealthCheck)}>Health Check</MenuItem>
-          <MenuItem onClick={() => handleEntryTypeSelect(EntryType.Hospital)}>Hospital</MenuItem>
-          <MenuItem onClick={() => handleEntryTypeSelect(EntryType.OccupationalHealthcare)}>Occupational Healthcare</MenuItem>
-        </Menu>
-      </Box>
+          <Typography variant="h5">Entries</Typography>
+          <Button
+            variant="contained"
+            startIcon={<AddIcon />}
+            onClick={handleClick}
+            sx={{
+              background: "linear-gradient(45deg, #FE6B8B 30%, #FF8E53 90%)",
+              color: "white",
+              boxShadow: "0 3px 5px 2px rgba(255, 105, 135, .3)",
+            }}
+          >
+            Add New Entry
+          </Button>
+          <Menu
+            anchorEl={anchorEl}
+            open={Boolean(anchorEl)}
+            onClose={handleClose}
+            TransitionComponent={Fade}
+          >
+            <MenuItem
+              onClick={() => handleEntryTypeSelect(EntryType.HealthCheck)}
+            >
+              Health Check
+            </MenuItem>
+            <MenuItem onClick={() => handleEntryTypeSelect(EntryType.Hospital)}>
+              Hospital
+            </MenuItem>
+            <MenuItem
+              onClick={() =>
+                handleEntryTypeSelect(EntryType.OccupationalHealthcare)
+              }
+            >
+              Occupational Healthcare
+            </MenuItem>
+          </Menu>
+        </Box>
 
-      {selectedEntryType && (
-        <AddEntryForm
-          onSubmit={handleAddEntry}
-          onCancel={() => setSelectedEntryType(undefined)}
-          entryType={selectedEntryType}
-          diagnoses={diagnoses}
-        />
-      )}
+        {selectedEntryType && (
+          <Backdrop
+            open={true}
+            sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}
+          >
+            <AddEntryForm
+              onSubmit={handleAddEntry}
+              onCancel={() => setSelectedEntryType(undefined)}
+              entryType={selectedEntryType}
+              diagnoses={diagnoses}
+            />
+          </Backdrop>
+        )}
 
-      {patient.entries.map((entry) => (
-        <EntryDetails key={entry.id} entry={entry} />
-      ))}
-    </Paper>
+        {patient.entries.map((entry) => (
+          <EntryDetails key={entry.id} entry={entry} />
+        ))}
+      </Paper>
+    </Fade>
   );
 };
 

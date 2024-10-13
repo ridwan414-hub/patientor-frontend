@@ -1,7 +1,18 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import { Box, Table, Button, TableHead, Typography, TableCell, TableRow, TableBody } from '@mui/material';
-import axios from 'axios';
+import {
+  Box,
+  Button,
+  Typography,
+  Grid,
+  Card,
+  CardContent,
+  IconButton,
+  Tooltip,
+} from "@mui/material";
+import VisibilityIcon from "@mui/icons-material/Visibility";
+import AddIcon from "@mui/icons-material/Add";
+import axios from "axios";
 
 import { Patient, NewPatientEntry } from "../../types";
 import AddPatientModal from "../AddPatientModal";
@@ -11,12 +22,11 @@ import HealthRatingBar from "../HealthRatingBar";
 import patientService from "../../services/patientService";
 
 interface Props {
-  patients : Patient[]
-  setPatients: React.Dispatch<React.SetStateAction<Patient[]>>
+  patients: Patient[];
+  setPatients: React.Dispatch<React.SetStateAction<Patient[]>>;
 }
 
-const PatientListPage = ({ patients, setPatients } : Props ) => {
-
+const PatientListPage = ({ patients, setPatients }: Props) => {
   const [modalOpen, setModalOpen] = useState<boolean>(false);
   const [error, setError] = useState<string>();
 
@@ -35,7 +45,10 @@ const PatientListPage = ({ patients, setPatients } : Props ) => {
     } catch (e: unknown) {
       if (axios.isAxiosError(e)) {
         if (e?.response?.data && typeof e?.response?.data === "string") {
-          const message = e.response.data.replace('Something went wrong. Error: ', '');
+          const message = e.response.data.replace(
+            "Something went wrong. Error: ",
+            ""
+          );
           console.error(message);
           setError(message);
         } else {
@@ -49,44 +62,63 @@ const PatientListPage = ({ patients, setPatients } : Props ) => {
   };
   return (
     <div className="App">
-      <Box>
-        <Typography align="center" variant="h6">
-          Patient list
+      <Box mb={4}>
+        <Typography variant="h4" align="center" gutterBottom>
+          Patient List
         </Typography>
       </Box>
-      <Table style={{ marginBottom: "1em" }}>
-        <TableHead>
-          <TableRow>
-            <TableCell>Name</TableCell>
-            <TableCell>Gender</TableCell>
-            <TableCell>Occupation</TableCell>
-            <TableCell>Health Rating</TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {Object.values(patients).map((patient: Patient) => (
-            <TableRow key={patient.id}>
-              <TableCell>
-                <Link to={`/patients/${patient.id}`}>{patient.name}</Link>
-              </TableCell>
-              <TableCell>{patient.gender}</TableCell>
-              <TableCell>{patient.occupation}</TableCell>
-              <TableCell>
-                <HealthRatingBar showText={false} rating={1} />
-              </TableCell>
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
+      <Grid container spacing={3}>
+        {Object.values(patients).map((patient: Patient) => (
+          <Grid item xs={12} sm={6} md={4} key={patient.id}>
+            <Card>
+              <CardContent>
+                <Typography variant="h6" gutterBottom>
+                  {patient.name}
+                </Typography>
+                <Typography color="textSecondary">
+                  Gender: {patient.gender}
+                </Typography>
+                <Typography color="textSecondary">
+                  Occupation: {patient.occupation}
+                </Typography>
+                <Box
+                  mt={2}
+                  display="flex"
+                  justifyContent="space-between"
+                  alignItems="center"
+                >
+                  <HealthRatingBar showText={false} rating={1} />
+                  <Tooltip title="View Patient">
+                    <IconButton
+                      component={Link}
+                      to={`/patients/${patient.id}`}
+                      color="primary"
+                    >
+                      <VisibilityIcon />
+                    </IconButton>
+                  </Tooltip>
+                </Box>
+              </CardContent>
+            </Card>
+          </Grid>
+        ))}
+      </Grid>
+      <Box mt={4} display="flex" justifyContent="center">
+        <Button
+          variant="contained"
+          color="secondary"
+          startIcon={<AddIcon />}
+          onClick={() => openModal()}
+        >
+          Add New Patient
+        </Button>
+      </Box>
       <AddPatientModal
         modalOpen={modalOpen}
         onSubmit={submitNewPatient}
         error={error}
         onClose={closeModal}
       />
-      <Button variant="contained" onClick={() => openModal()}>
-        Add New Patient
-      </Button>
     </div>
   );
 };
